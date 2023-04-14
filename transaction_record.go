@@ -5,21 +5,21 @@ import (
 	"chainmaker.org/chainmaker/contract-sdk-go/v2/sdk"
 )
 
-type MedicineData struct {
+type TransactionRecord struct {
 }
 
-type MedicineDataContract struct {
+type TransactionRecordContract struct {
 }
 
-func (m *MedicineDataContract) InitContract() protogo.Response {
+func (m *TransactionRecordContract) InitContract() protogo.Response {
 	return sdk.Success([]byte("Init contract success"))
 }
 
-func (m *MedicineDataContract) UpgradeContract() protogo.Response {
+func (m *TransactionRecordContract) UpgradeContract() protogo.Response {
 	return sdk.Success([]byte("Upgrade contract success"))
 }
 
-func (m *MedicineDataContract) InvokeContract(method string) protogo.Response {
+func (m *TransactionRecordContract) InvokeContract(method string) protogo.Response {
 	switch method {
 	default:
 		return sdk.Error("invalid method")
