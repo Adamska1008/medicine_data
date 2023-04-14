@@ -6,6 +6,8 @@ import (
 )
 
 type MedicineData struct {
+	TraceNo     string `json:traceno`
+	Name        string `json:name`
 }
 
 type MedicineDataContract struct {
