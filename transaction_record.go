@@ -6,22 +6,42 @@ import (
 )
 
 type TransactionRecord struct {
+	Retailer Retailer `json:"retailer"`
+	// TODO
+}
+
+type Retailer struct {
+	Name        string `json:"name"`
+	License     string `json:"license"`
+	LegalPerson string `json:"legal_person"`
 }
 
 type TransactionRecordContract struct {
 }
 
-func (m *TransactionRecordContract) InitContract() protogo.Response {
+func (t *TransactionRecordContract) InitContract() protogo.Response {
 	return sdk.Success([]byte("Init contract success"))
 }
 
-func (m *TransactionRecordContract) UpgradeContract() protogo.Response {
+func (t *TransactionRecordContract) UpgradeContract() protogo.Response {
 	return sdk.Success([]byte("Upgrade contract success"))
 }
 
-func (m *TransactionRecordContract) InvokeContract(method string) protogo.Response {
+func (t *TransactionRecordContract) InvokeContract(method string) protogo.Response {
 	switch method {
+	case "save":
+		return t.save()
+	case "queryHistory":
+		return t.queryHistory()
 	default:
 		return sdk.Error("invalid method")
 	}
+}
+
+func (t *TransactionRecordContract) save() protogo.Response {
+	// TODO
+}
+
+func (t *TransactionRecordContract) queryHistory() protogo.Response {
+	// TODO
 }
