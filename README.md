@@ -23,4 +23,4 @@
 
 ## Requires
 * Go version 1.20
-
+* 7zip: 编译后的文件需要经过7zip压缩形成最后的合约文件，使用`sudo apt install p7zip-full p7zip-rar`在Ubuntu上安装7zip。
