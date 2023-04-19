@@ -53,8 +53,8 @@ func (t *TransactionRecordContract) InvokeContract(method string) protogo.Respon
 	switch method {
 	case "save":
 		return t.save()
-	// case "queryHistory":
-	// 	return t.queryHistory()
+	case "queryById":
+		return t.queryById()
 	default:
 		return sdk.Error("invalid method")
 	}
@@ -62,25 +62,41 @@ func (t *TransactionRecordContract) InvokeContract(method string) protogo.Respon
 
 func (t *TransactionRecordContract) save() protogo.Response {
 	params := sdk.Instance.GetArgs()
+	// 获取 id 参数
 	transactionId := string(params["transaction_id"])
+	// 获取 transaction 字符串
 	transactionRecordStr := string(params["transaction_record"])
 	var transactionRecord TransactionRecord
+	// 反序列化
 	err := json.Unmarshal([]byte(transactionRecordStr), &transactionRecord)
 	if err != nil {
 		errMsg := fmt.Sprintf("unmarshall transaction record failed: %s", err)
 		sdk.Instance.Errorf(errMsg)
 		return sdk.Error(errMsg)
 	}
+	// 发送事件
 	sdk.Instance.EmitEvent(transactionId, []string{transactionRecordStr})
+	// 保存数据
 	err = sdk.Instance.PutState(transactionId, "", transactionRecordStr)
 	if err != nil {
 		errMsg := fmt.Sprintf("put new transaction record failed, %s", err)
 		sdk.Instance.Errorf(errMsg)
 		return sdk.Error(errMsg)
 	}
+	sdk.Instance.Infof("[save] transaction_id = " + transactionId)
 	return sdk.Success([]byte(transactionId + transactionRecordStr))
 }
 
-// func (t *TransactionRecordContract) queryHistory() protogo.Response {
-// 	// TODO
-// }
+func (t *TransactionRecordContract) queryById() protogo.Response {
+	id := string(sdk.Instance.GetArgs()["transaction_id"])
+	result, err := sdk.Instance.GetStateByte("transaction_id", id)
+	if err != nil {
+		return sdk.Error("failed to call get_state")
+	}
+	var record TransactionRecord
+	if err = json.Unmarshal(result, &record); err != nil {
+		return sdk.Error(fmt.Sprintf("unmarshal record failed, err: %s", err))
+	}
+	sdk.Instance.Infof("[queryById] id = " + id)
+	return sdk.Success(result)
+}
