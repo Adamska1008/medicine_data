@@ -23,7 +23,7 @@ type TransactionRecord struct {
 type Medicine struct {
 	Id     int    `json:"id"`
 	Batch  string `json:"batch"`
-	Number string `json:"number"`
+	Number int    `json:"number"`
 	Price  int    `json:"price"`
 }
 
