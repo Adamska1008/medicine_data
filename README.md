@@ -24,8 +24,10 @@
 ### 药品信息
 
 
+
 ## Run
-使用`./build.sh TransactionRecordContract`编译交易记录智能合约。
+* 药品信息合约：确保`main.go`中使用合约为`MedicineDataContract`。使用`./build.sh MedicineDataContract`编译交易记录智能合约。
+* 交易记录合约：确保`main.go`中使用合约为`TransactionRecordContract`。使用`./build.sh TransactionRecordContract`编译交易记录智能合约。
 
 ## Requires
 * Go version 1.20
