@@ -77,7 +77,7 @@ func (t *TransactionRecordContract) save() protogo.Response {
 	// 发送事件
 	sdk.Instance.EmitEvent(transactionId, []string{transactionRecordStr})
 	// 保存数据
-	err = sdk.Instance.PutState(transactionId, "", transactionRecordStr)
+	err = sdk.Instance.PutState("transaction_id", transactionId, transactionRecordStr)
 	if err != nil {
 		errMsg := fmt.Sprintf("put new transaction record failed, %s", err)
 		sdk.Instance.Errorf(errMsg)
@@ -97,6 +97,6 @@ func (t *TransactionRecordContract) queryById() protogo.Response {
 	if err = json.Unmarshal(result, &record); err != nil {
 		return sdk.Error(fmt.Sprintf("unmarshal record failed, err: %s", err))
 	}
-	sdk.Instance.Infof("[queryById] id = " + id)
+	sdk.Instance.Infof("[queryById] record_id = " + id)
 	return sdk.Success(result)
 }
