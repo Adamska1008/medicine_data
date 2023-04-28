@@ -10,7 +10,7 @@ import (
 )
 
 type MedicineData struct {
-	TraceNo     string `json:traceno`
+	TraceNo           string `json:traceno`
 	Name              string    `json:"name"`
 	Company           string    `json:"company"`
 	Licence           string    `json:"license"`
