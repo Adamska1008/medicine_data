@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"time"
 
 	"chainmaker.org/chainmaker/contract-sdk-go/v2/pb/protogo"
@@ -24,7 +25,6 @@ type MedicineData struct {
 	Gmp               string    `json:"gmp"`                // GMP 标号
 	Responsible       string    `json:"responsible_person"` // 负责人
 	Remark            string    `json:"remark"`             // 备注
-	Status            string    `json:"status"`             // 药品状态
 	AdminId           string    `json:"admin_id"`           // 批准审核人的ID
 	RemainingQuantity int       `json:"remaining_quantity"` // 剩余数量
 	ProductionDate    time.Time `json:"production_date"`    // 生产时间
@@ -48,6 +48,8 @@ func (m *MedicineDataContract) InvokeContract(method string) protogo.Response {
 		return m.save()
 	case "queryById":
 		return m.queryById()
+	case "buy":
+		return m.buy()
 	default:
 		return sdk.Error("invalid method")
 	}
@@ -92,4 +94,33 @@ func (m *MedicineDataContract) queryById() protogo.Response {
 	}
 	sdk.Instance.Infof("[queryById] medicine_id = " + id)
 	return sdk.Success(result)
+}
+
+func (m *MedicineDataContract) buy() protogo.Response {
+	id := string(sdk.Instance.GetArgs()["medicine_id"])
+	number, err := strconv.ParseInt(string(sdk.Instance.GetArgs()["number"]), 10, 32)
+	if err != nil {
+		return sdk.Error("the arg 'number' is not int")
+	}
+	result, err := sdk.Instance.GetStateByte("medicine_id", id)
+	if err != nil {
+		return sdk.Error("failed to call get_state")
+	}
+	var medicine MedicineData
+	if err = json.Unmarshal(result, &medicine); err != nil {
+		return sdk.Error(fmt.Sprintf("unmarshal record failed, err: %s", err))
+	}
+	medicine.RemainingQuantity -= int(number)
+	medicineStr, _ := json.Marshal(medicine)
+	// 发送事件
+	sdk.Instance.EmitEvent(id, []string{string(medicineStr)})
+	// 保存数据
+	err = sdk.Instance.PutState("medicine_id", id, string(medicineStr))
+	if err != nil {
+		errMsg := fmt.Sprintf("put new transaction record failed, %s", err)
+		sdk.Instance.Errorf(errMsg)
+		return sdk.Error(errMsg)
+	}
+	sdk.Instance.Infof("[update] medicine_id = " + id + " number " + strconv.Itoa(int(number)))
+	return sdk.Success([]byte(id + string(medicineStr)))
 }

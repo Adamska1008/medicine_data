@@ -10,34 +10,45 @@ import (
 )
 
 type TransactionRecord struct {
-	Retailer     Retailer    `json:"retailer"`
-	Medicine     Medicine    `json:"medicine"`
-	Responsible  Responsible `json:"resiponsible"`
-	DeliveryAddr string      `json:"delivery_address"` // 发货地址
-	DeliveryTime time.Time   `json:"delivery_time"`    // 交货时间
-	ShippingAddr string      `json:"shipping_addr"`    // 收货地址
-	ReceiptTime  time.Time   `json:"receipt_time"`     // 收货时间
-	Remark       string      `json:"remark"`           // 备注
+	Sum         int       //  交易总金额
+	Cnt         int       //  交易数量
+	BuyTime     time.Time //  交易时间
+	FromAddress string    //  发货地址
+	ToAddress   string    //  收货地址
+	MedicineId  string    //  药品id
+	BuyerId     string    //  经销商id
+	SellerId    string    //  生产商id
 }
 
-type Medicine struct {
-	Id     int    `json:"id"`
-	Batch  string `json:"batch"`
-	Number string `json:"number"`
-	Price  int    `json:"price"`
-}
+// type TransactionRecord struct {
+// 	Retailer     Retailer    `json:"retailer"`
+// 	Medicine     Medicine    `json:"medicine"`
+// 	Responsible  Responsible `json:"resiponsible"`
+// 	DeliveryAddr string      `json:"delivery_address"` // 发货地址
+// 	DeliveryTime time.Time   `json:"delivery_time"`    // 交货时间
+// 	ShippingAddr string      `json:"shipping_addr"`    // 收货地址
+// 	ReceiptTime  time.Time   `json:"receipt_time"`     // 收货时间
+// 	Remark       string      `json:"remark"`           // 备注
+// }
 
-type Retailer struct {
-	Name        string `json:"name"`
-	License     string `json:"license"`
-	LegalPerson string `json:"legal_person"`
-}
+// type Medicine struct {
+// 	Id     int    `json:"id"`
+// 	Batch  string `json:"batch"`
+// 	Number string `json:"number"`
+// 	Price  int    `json:"price"`
+// }
 
-type Responsible struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
-	Phone string `json:"phone"`
-}
+// type Retailer struct {
+// 	Name        string `json:"name"`
+// 	License     string `json:"license"`
+// 	LegalPerson string `json:"legal_person"`
+// }
+
+// type Responsible struct {
+// 	Name  string `json:"name"`
+// 	Email string `json:"email"`
+// 	Phone string `json:"phone"`
+// }
 
 type TransactionRecordContract struct{}
 
