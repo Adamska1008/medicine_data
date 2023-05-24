@@ -11,6 +11,7 @@ import (
 )
 
 type MedicineData struct {
+	TraceNo           string `json:traceno`
 	Name              string    `json:"name"`
 	Company           string    `json:"company"`
 	Licence           string    `json:"license"`
@@ -29,7 +30,6 @@ type MedicineData struct {
 	RemainingQuantity int       `json:"remaining_quantity"` // 剩余数量
 	ProductionDate    time.Time `json:"production_date"`    // 生产时间
 	ExpiredDate       time.Time `json:"expired_date"`       // 过期时间
-}
 
 type MedicineDataContract struct {
 }
