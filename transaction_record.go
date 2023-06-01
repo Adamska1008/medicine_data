@@ -3,54 +3,25 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"time"
 
 	"chainmaker.org/chainmaker/contract-sdk-go/v2/pb/protogo"
+	"chainmaker.org/chainmaker/contract-sdk-go/v2/sandbox"
 	"chainmaker.org/chainmaker/contract-sdk-go/v2/sdk"
 )
 
-type TransactionRecord struct {
-	Sum         int       //  交易总金额
-	Cnt         int       //  交易数量
-	BuyTime     time.Time //  交易时间
-	FromAddress string    //  发货地址
-	ToAddress   string    //  收货地址
-	MedicineId  string    //  药品id
-	BuyerId     string    //  经销商id
-	SellerId    string    //  生产商id
-}
-
-// type TransactionRecord struct {
-// 	Retailer     Retailer    `json:"retailer"`
-// 	Medicine     Medicine    `json:"medicine"`
-// 	Responsible  Responsible `json:"resiponsible"`
-// 	DeliveryAddr string      `json:"delivery_address"` // 发货地址
-// 	DeliveryTime time.Time   `json:"delivery_time"`    // 交货时间
-// 	ShippingAddr string      `json:"shipping_addr"`    // 收货地址
-// 	ReceiptTime  time.Time   `json:"receipt_time"`     // 收货时间
-// 	Remark       string      `json:"remark"`           // 备注
-// }
-
-// type Medicine struct {
-// 	Id     int    `json:"id"`
-// 	Batch  string `json:"batch"`
-// 	Number string `json:"number"`
-// 	Price  int    `json:"price"`
-// }
-
-// type Retailer struct {
-// 	Name        string `json:"name"`
-// 	License     string `json:"license"`
-// 	LegalPerson string `json:"legal_person"`
-// }
-
-// type Responsible struct {
-// 	Name  string `json:"name"`
-// 	Email string `json:"email"`
-// 	Phone string `json:"phone"`
-// }
-
 type TransactionRecordContract struct{}
+
+type TransactionRecord struct {
+	Sum         int       `json:"sum"`         //  交易总金额
+	Cnt         int       `json:"cnt"`         //  交易数量
+	BuyTime     time.Time `json:"buyTime"`     //  交易时间
+	FromAddress string    `json:"fromAddress"` //  发货地址
+	ToAddress   string    `json:"toAddress"`   //  收货地址
+	MedicineId  string    `json:"medicineId"`  //  药品id
+	BuyerId     string    `json:"buyId"`       //  经销商id
+}
 
 func (t *TransactionRecordContract) InitContract() protogo.Response {
 	return sdk.Success([]byte("Init contract success"))
@@ -110,4 +81,11 @@ func (t *TransactionRecordContract) queryById() protogo.Response {
 	}
 	sdk.Instance.Infof("[queryById] record_id = " + id)
 	return sdk.Success(result)
+}
+
+func main() {
+	err := sandbox.Start(new(TransactionRecordContract))
+	if err != nil {
+		log.Fatal(err)
+	}
 }
